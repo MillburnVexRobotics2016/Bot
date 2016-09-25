@@ -10,30 +10,30 @@
 
 task main()
 {
-	int forkTime = 2000;
+	int forkTime = 1200;
 	int xTime = 2000;
 	while(true)
 	{
 
 		//processJoysticks();
 		motor[frontLeft] = vexRT[Ch3];
-	motor[backLeft] = vexRT[Ch3];
+	  motor[backLeft] = vexRT[Ch3];
 
-	motor[frontRight] = vexRT[Ch3];
-	motor[backRight] = vexRT[Ch3];
+	  motor[frontRight] = vexRT[Ch3];
+	  motor[backRight] = vexRT[Ch3];
 
-	motor[frontLeft] =+ vexRT[Ch1];
-	motor[backLeft] =+ vexRT[Ch1];
+	  motor[frontLeft] =+ vexRT[Ch1];
+	  motor[backLeft] =+ vexRT[Ch1];
 
-	motor[frontRight] =+ -vexRT[Ch1];
-	motor[backRight] =+ -vexRT[Ch1];
+	  motor[frontRight] =+ -vexRT[Ch1];
+	  motor[backRight] =+ -vexRT[Ch1];
 
 		/** lifts forklift */
 		if(vexRT[Btn7U] == 1 ) {
 			motor[forkLeft] = 65;
 			motor[forkRight] = -65;
 			wait1Msec (forkTime);
-
+			motor[forkLeft] = motor[forkRight] = 0;
 		}
 
 		/** brings it down forklift */
@@ -41,8 +41,7 @@ task main()
 			motor[forkLeft] = -65;
 			motor[forkRight] = 65;
 			wait1Msec (forkTime);
-
-
+			motor[forkLeft] = motor[forkRight] = 0;
 
 		}
 
@@ -59,9 +58,3 @@ task main()
 		}
 	}
 }
-
-//task processJoysticks()
-//{
-
-
-//}
