@@ -14,7 +14,6 @@ task main()
 	int xTime = 2000;
 	while(true)
 	{
-
 		//processJoysticks();
 		motor[frontLeft] = vexRT[Ch3];
 	  motor[backLeft] = vexRT[Ch3];
@@ -32,29 +31,34 @@ task main()
 		if(vexRT[Btn7U] == 1 ) {
 			motor[forkLeft] = 65;
 			motor[forkRight] = -65;
-			wait1Msec (forkTime);
 			motor[forkLeft] = motor[forkRight] = 0;
 		}
-
-		/** brings it down forklift */
-		if(vexRT[Btn7R] == 1) {
+		else if(vexRT[Btn7R] == 1) {
 			motor[forkLeft] = -65;
 			motor[forkRight] = 65;
-			wait1Msec (forkTime);
 			motor[forkLeft] = motor[forkRight] = 0;
-
 		}
+		else{
+			motor[forkLeft] = 0;
+			motor[forkRight] = 0;
+		}
+
+
+
+
 
 		if(vexRT[Btn7L] == 1) {
-			motor[xLeft] = -65;
-			motor[xRight] = 65;
-			wait1Msec (xTime);
-		}
+			motor[xLeft] = -50;
+			motor[xRight] = 40;
 
-		if(vexRT[Btn7D] == 1) {
-			motor[xLeft] = 65;
-			motor[xRight] = -65;
-			wait1Msec (xTime);
 		}
+		else if(vexRT[Btn7D] == 1) {
+			motor[xLeft] = 50;
+			motor[xRight] = -40;
+
+		}else{
+		  motor[xLeft] = 0;
+		  motor[xRight] = 0;
+	  }
 	}
 }
