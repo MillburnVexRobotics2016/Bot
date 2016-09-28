@@ -10,10 +10,12 @@
 
 task main()
 {
-	int forkTime = 1200;
-	int xTime = 2000;
+	int xL = 100;
+	int xR = 100;
 	while(true)
 	{
+
+
 		//processJoysticks();
 		motor[frontLeft] = vexRT[Ch3];
 	  motor[backLeft] = vexRT[Ch3];
@@ -27,34 +29,44 @@ task main()
 	  motor[frontRight] =+ -vexRT[Ch1];
 	  motor[backRight] =+ -vexRT[Ch1];
 
+	  //adjusts the speeds of the scissor lift motors
+	  if(vexRT[Btn8D]) xL = xL + 5;
+
+		if(vexRT[Btn8R]) xR = xR + 5;
+
+	  if(vexRT[Btn8L]) xL = xL - 5;
+
+		if(vexRT[Btn8U]) xR = xR - 5;
+
+		if(vexRT[Btn6U]){
+			xL = 100;
+			xR = 100;
+		}
+
 		/** lifts forklift */
 		if(vexRT[Btn7U] == 1 ) {
-			motor[forkLeft] = 65;
-			motor[forkRight] = -65;
-			motor[forkLeft] = motor[forkRight] = 0;
+			motor[forkLeft] = 100;
+			motor[forkRight] = -100;
+			//motor[forkLeft] = motor[forkRight] = 0;
 		}
 		else if(vexRT[Btn7R] == 1) {
-			motor[forkLeft] = -65;
-			motor[forkRight] = 65;
-			motor[forkLeft] = motor[forkRight] = 0;
+			motor[forkLeft] = -50;
+			motor[forkRight] = 50;
+			//motor[forkLeft] = motor[forkRight] = 0;
 		}
 		else{
 			motor[forkLeft] = 0;
 			motor[forkRight] = 0;
 		}
 
-
-
-
-
 		if(vexRT[Btn7L] == 1) {
-			motor[xLeft] = -50;
-			motor[xRight] = 40;
+			motor[xLeft] = -xL;
+			motor[xRight] = xR;
 
 		}
 		else if(vexRT[Btn7D] == 1) {
-			motor[xLeft] = 50;
-			motor[xRight] = -40;
+			motor[xLeft] = xL;
+			motor[xRight] = -xR;
 
 		}else{
 		  motor[xLeft] = 0;
