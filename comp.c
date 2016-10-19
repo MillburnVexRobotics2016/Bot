@@ -10,6 +10,17 @@
 // Select Download method as "competition"
 #pragma competitionControl(Competition)
 
+//motor definitions
+#pragma config(Motor,  port1,           frontLeft,     tmotorVex393_HBridge, openLoop, driveLeft)
+#pragma config(Motor,  port2,           backRight,     tmotorVex393_MC29, openLoop, reversed, driveRight)
+#pragma config(Motor,  port3,           claws,         tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port4,           arms,          tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port5,            ,             tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port6,            ,             tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port7,           xLeft,         tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port8,           xRight,        tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port9,           frontRight,    tmotorVex393_MC29, openLoop, driveRight)
+#pragma config(Motor,  port10,          backLeft,      tmotorVex393_HBridge, openLoop, reversed, driveLeft)
 //Main competition background code...do not modify!
 #include "Vex_Competition_Includes.c"
 
@@ -29,7 +40,7 @@ void pre_auton()
   // running between Autonomous and Driver controlled modes. You will need to
   // manage all user created tasks if set to false.
   bStopTasksBetweenModes = true;
-  drive(70,
+
 
 	// Set bDisplayCompetitionStatusOnLcd to false if you don't want the LCD
 	// used by the competition include file, for example, you might want
@@ -52,41 +63,6 @@ void pre_auton()
 
 task autonomous()
 {
-	void drive(int speed, int time, string direction){
-			if(time >= 0){
-
-				if(direction == "forward"){
-					motor[frontLeft] = speed;
-				  motor[frontRight] = speed;
-					motor[backLeft] = speed;
-					motor[backRight] = speed;
-					wait1Msec(time);
-
-
-				}if(direction == "back"){
-					motor[frontLeft] = -speed;
-					motor[frontRight] = -speed;
-					motor[backLeft] = -speed;
-					motor[backRight] = -speed;
-					wait1Msec(time);
-				}
-				if(direction == "right"){
-					motor[frontLeft] = speed;
-				  motor[frontRight] = -speed;
-				  motor[backLeft] = speed;
-				  motor[backRight] = -speed;
-				  wait1Msec(time);
-				}
-				if(direction == "left"){
-					motor[frontLeft] = -speed;
-					motor[frontRight] = speed;
-					motor[backLeft] = -speed;
-					motor[backRight] = speed;
-					wait1Msec(time);
-					}
-			}
-
-		}
 
   // ..........................................................................
   // Insert user code here.
@@ -96,6 +72,35 @@ task autonomous()
   AutonomousCodePlaceholderForTesting();
 }
 
+
+//drive sub task\
+//called in the main task
+task driveM()
+{
+	int deadzone = 20;
+	while(true)
+	{
+		if(vexRT[Ch3Xmtr2] > deadzone || vexRT[Ch3Xmtr2] < -(deadzone) || vexRT[Ch4Xmtr2] > deadzone || vexRT[Ch4Xmtr2] < -(deadzone)){
+
+			if(vexRT[Ch3Xmtr2] > deadzone || vexRT[Ch3Xmtr2] < -(deadzone)){
+	  		motor[frontLeft] = vexRT[Ch3Xmtr2];
+	  		motor[backLeft] = vexRT[Ch3Xmtr2];
+	  		motor[frontRight] = -(vexRT[Ch3Xmtr2]);
+	  		motor[backRight] = -(vexRT[Ch3Xmtr2]);
+	  	}
+
+	  	if(vexRT[Ch4Xmtr2] > deadzone || vexRT[Ch4Xmtr2] < -deadzone){
+	  		motor[frontLeft] += vexRT[Ch4Xmtr2];
+	  		motor[backLeft] += vexRT[Ch4Xmtr2];
+	  		motor[frontRight] += vexRT[Ch4Xmtr2];
+	  		motor[backRight] += vexRT[Ch4Xmtr2];
+	  	}
+
+	  }else{
+	  	motor[frontLeft] = motor[backLeft] = motor[frontRight] = motor[backRight] = 0;
+	  }
+	}
+}
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
 /*                              User Control Task                            */
@@ -110,18 +115,54 @@ task usercontrol()
 {
   // User control code here, inside the loop
 
-  while (true)
-  {
-    // This is the main execution loop for the user control program.
-    // Each time through the loop your program should update motor + servo
-    // values based on feedback from the joysticks.
+  int deadzone = 20;
+	int scissorbase = 105;
 
-    // ........................................................................
-    // Insert user code here. This is where you use the joystick values to
-    // update your motors, etc.
-    // ........................................................................
+	int screl = -5;
 
-    // Remove this function call once you have "real" code.
-    UserControlCodePlaceholderForTesting();
-  }
+	int clawSpeed = 100;
+
+	startTask(driveM);
+	while(true){
+
+
+	//claw and arm rotation
+	  if(vexRT[Ch2] > deadzone || vexRT[Ch2] < -(deadzone)){
+	  	motor[arms] = (vexRT[Ch2]/1.75);
+	  }else{
+	  	motor[arms] = 0;
+	  }
+
+	  if(vexRT[Btn5D]){
+	  	motor[claws] = clawSpeed;
+	  }
+	  else if(vexRT[Btn5U]){
+	  	motor[claws] = -clawSpeed;
+	  }else{
+	  	motor[claws] = 0;
+	  }
+
+	  bool clicked = false;
+		//adjusts the speeds of the scissor lift motors
+		if(vexRT[Btn8L] && clicked == false) { screl -= 5; clicked = true; } else
+		if(vexRT[Btn8R] && clicked == false) { screl += 5; clicked = true; }
+		else { clicked = false; }
+
+		if(vexRT[Btn6U]){
+			screl = 0;
+		}
+		//raises and lowers the scissor lift
+
+		if(vexRT[Btn7L] == 1) {
+			motor[xRight] = -(scissorbase + screl);
+			motor[xLeft] = (scissorbase + screl);
+		}
+		else if(vexRT[Btn7D] == 1 ) {
+			motor[xRight] = (scissorbase + screl);
+			motor[xLeft] = -(scissorbase + screl);
+		}else {
+			motor[xLeft] = 0;
+			motor[xRight] = 0;
+		}
+	}
 }
