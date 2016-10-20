@@ -107,6 +107,48 @@ task autonomous()
 	motor[backLeft] = -speed;
 	motor[backRight] = -speed;
 
+
+	motor[arms] = 100;
+	wait1msec(1000);
+	motor[arms]  = 0;
+
+	speed = 100;
+	motor[frontLeft] = speed;
+	motor[frontRight] = -speed;
+	motor[backLeft] = speed;
+	motor[backRight] = -speed;
+	wait1msec(1000);
+	speed = 0;
+	motor[frontLeft] = -speed;
+	motor[frontRight] = -speed;
+	motor[backLeft] = speed;
+	motor[backRight] = speed;
+
+	speed = 100;
+	motor[frontLeft] = speed;
+	motor[frontRight] = speed;
+	motor[backLeft] = -speed;
+	motor[backRight] = -speed;
+	wait1msec(1000);
+	speed = 0;
+	motor[frontLeft] = -speed;
+	motor[frontRight] = -speed;
+	motor[backLeft] = speed;
+	motor[backRight] = speed;
+
+	speed = 100;
+	motor[frontLeft] = speed;
+	motor[frontRight] = speed;
+	motor[backLeft] = -speed;
+	motor[backRight] = -speed;
+	wait1msec(7000);
+	speed = 0;
+	motor[frontLeft] = -speed;
+	motor[frontRight] = -speed;
+	motor[backLeft] = speed;
+	motor[backRight] = speed;
+
+
 }
 
 
@@ -150,11 +192,10 @@ task driveM()
 
 task usercontrol()
 {
-  // User control code here, inside the loop
 
   int deadzone = 20;
-	int xLeft = 110;
-	int xRight = 100;
+	int xLeftS = 110;
+	int xRightS = 100;
 
 	int clawSpeed = 100;
 
@@ -169,29 +210,28 @@ task usercontrol()
 	  	motor[arms] = 0;
 	  }
 
-	  //claw open close]
+	  //claw open close
 	  //open
 	  if(vexRT[Btn6U]){
 	  	motor[claws] = clawSpeed;
 	  //close
 	  } else if(vexRT[Btn5U]){
-	  	motor[claws] = clawSpeed;
+	  	motor[claws] = -clawSpeed;
 	  }else{
 	  	motor[claws] = 0;
 	  }
 
 		//scissor lift controls
-		if(vexRT[Btn7U] == 1) {
-			motor[xRight] = -xRight;
-			motor[xLeft] = xLeft;
-		}
-		else if(vexRT[Btn7D] == 1 ) {
-			motor[xRight] = xRight;
-			motor[xLeft] = -xLeft;
-		} else if(vexRT[Btn7L] = 1) {
-			motor[xLeft] = xLeft;
-		} else if(vexRT[Btn7R] = 1) {
-			motor[xRight] = -xRight;
+		if(vexRT[Btn7U]) {
+			motor[xRight] = -xRightS;
+			motor[xLeft] = xLeftS;
+		} else if(vexRT[Btn7D] ) {
+			motor[xRight] = xRightS;
+			motor   [xLeft] = -xLeftS;
+		} else if(vexRT[Btn7L]) {
+			motor[xLeft] = xLeftS;
+		} else if(vexRT[Btn7R]) {
+			motor[xRight] = -xRightS;
 		} else {
 			motor[xLeft] = 0;
 			motor[xRight] = 0;
