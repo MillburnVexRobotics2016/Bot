@@ -24,6 +24,11 @@
 //Main competition background code...do not modify!
 #include "Vex_Competition_Includes.c"
 
+#define STOP 0
+#define FORWARDS 1
+#define BACKWARDS 3
+#define TURNLEFT 2
+#define TURNRIGHT 4
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
 /*                                                                           */
@@ -61,92 +66,84 @@ void pre_auton()
 /*                                                                           */
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
+void drive(int direction){
+	int speed = 100;
+	if(direction == 1){
+		motor[frontLeft] = speed;
+		motor[frontRight] = -speed;
+		motor[backLeft] = speed;
+		motor[backRight] = -speed;
+	}else if(direction == 3){
+		motor[frontLeft] = -speed;
+		motor[frontRight] = speed;
+		motor[backLeft] = -speed;
+		motor[backRight] = speed;
+	}else if(direction == 2){
+	  motor[frontLeft] = -speed;
+		motor[frontRight] = -speed;
+		motor[backLeft] = -speed;
+		motor[backRight] = -speed;
+	}else if(direction == 4){
+		motor[frontLeft] = speed;
+		motor[frontRight] = speed;
+		motor[backLeft] = speed;
+		motor[backRight] = speed;
+	}else{
+	  speed = 0;
+		motor[frontLeft] = speed;
+		motor[frontRight] = -speed;
+		motor[backLeft] = speed;
+		motor[backRight] = -speed;
+	}
+}
 
 task autonomous()
 {
-	int speed = 100 ;
 
-	motor[frontLeft] = speed;
-	motor[frontRight] = speed;
-	motor[backLeft] = -speed;
-	motor[backRight] = -speed;
+	drive(FORWARDS);
 	motor[xLeft] = 100;
 	motor[xRight] = -100;
 	wait1Msec(3000);
-	speed = 0;
-	motor[frontLeft] = speed;
-	motor[frontRight] = speed;
-	motor[backLeft] = -speed;
-	motor[backRight] = -speed;
-
-	wait1Msec(2000);
-	motor[xLeft] = 0;
-	motor[xRight] = 0;
-
+	drive(STOP);
 	motor[arms] = -100;
-	wait1Msec(1000);
+	wait1Msec(800);
 	motor[arms] = 0;
-
 	motor[claws] = -100;
 	wait1Msec(1000);
 	motor[claws] = 0;
-
 	motor[arms] = 100;
-	wait1Msec(1000);
+	wait1Msec(200);
+	motor[xLeft] = 0;
+	motor[xRight] = 0;
+	wait1Msec(8000);
 	motor[arms] = 0;
 
-	speed = 100;
-	motor[frontLeft] = -speed;
-	motor[frontRight] = -speed;
-	motor[backLeft] = speed;
-	motor[backRight] = speed;
+	drive(BACKWARDS);
 	wait1Msec(1000);
-	speed = 0;
-	motor[frontLeft] = speed;
-	motor[frontRight] = speed;
-	motor[backLeft] = -speed;
-	motor[backRight] = -speed;
+	drive(STOP);
 
 
-	motor[arms] = 100;
-	wait1msec(1000);
+	motor[arms] = -100;
+	wait1Msec(1000);
 	motor[arms]  = 0;
 
-	speed = 100;
-	motor[frontLeft] = speed;
-	motor[frontRight] = -speed;
-	motor[backLeft] = speed;
-	motor[backRight] = -speed;
-	wait1msec(1000);
-	speed = 0;
-	motor[frontLeft] = -speed;
-	motor[frontRight] = -speed;
-	motor[backLeft] = speed;
-	motor[backRight] = speed;
+	drive(FORWARDS);
+	wait1Msec(1000);
+	drive(STOP);
 
-	speed = 100;
-	motor[frontLeft] = speed;
-	motor[frontRight] = speed;
-	motor[backLeft] = -speed;
-	motor[backRight] = -speed;
-	wait1msec(1000);
-	speed = 0;
-	motor[frontLeft] = -speed;
-	motor[frontRight] = -speed;
-	motor[backLeft] = speed;
-	motor[backRight] = speed;
+	drive(TURNRIGHT);
+	wait1Msec(1000);
+	drive(STOP);
 
-	speed = 100;
-	motor[frontLeft] = speed;
-	motor[frontRight] = speed;
-	motor[backLeft] = -speed;
-	motor[backRight] = -speed;
-	wait1msec(7000);
-	speed = 0;
-	motor[frontLeft] = -speed;
-	motor[frontRight] = -speed;
-	motor[backLeft] = speed;
-	motor[backRight] = speed;
+
+	while(true){
+	motor[arms] = 100;
+	wait1Msec(1000);
+	motor[arms] = -100;
+	}
+	drive(FORWARDS);
+	wait1Msec(7000);
+	drive(STOP);
 
 
 }
@@ -159,7 +156,7 @@ task driveM()
 	int deadzone = 20;
 	while(true)
 	{
-		if(vexRT[Ch3Xmtr2] > deadzone || vexRT[Ch3Xmtr2] < -(deadzone) || vexRT[Ch4Xmtr2] > deadzone || vexRT[Ch4Xmtr2] < -(deadzone)){
+		if(vexRT[Ch3Xmtr2] > deadzone || vexRT[Ch3Xmtr2] < -(deadzone) || vexRT[Ch1Xmtr2] > deadzone || vexRT[Ch1Xmtr2] < -(deadzone)){
 
 			if(vexRT[Ch3Xmtr2] > deadzone || vexRT[Ch3Xmtr2] < -(deadzone)){
 	  		motor[frontLeft] = vexRT[Ch3Xmtr2];
@@ -168,11 +165,11 @@ task driveM()
 	  		motor[backRight] = -(vexRT[Ch3Xmtr2]);
 	  	}
 
-	  	if(vexRT[Ch4Xmtr2] > deadzone || vexRT[Ch4Xmtr2] < -deadzone){
-	  		motor[frontLeft] += vexRT[Ch4Xmtr2];
-	  		motor[backLeft] += vexRT[Ch4Xmtr2];
-	  		motor[frontRight] += vexRT[Ch4Xmtr2];
-	  		motor[backRight] += vexRT[Ch4Xmtr2];
+	  	if(vexRT[Ch1Xmtr2] > deadzone || vexRT[Ch1Xmtr2] < -deadzone){
+	  		motor[frontLeft] += vexRT[Ch1Xmtr2];
+	  		motor[backLeft] += vexRT[Ch1Xmtr2];
+	  		motor[frontRight] += vexRT[Ch1Xmtr2];
+	  		motor[backRight] += vexRT[Ch1Xmtr2];
 	  	}
 
 	  }else{
@@ -194,8 +191,8 @@ task usercontrol()
 {
 
   int deadzone = 20;
-	int xLeftS = 110;
-	int xRightS = 100;
+	int xLeftS = 127;
+	int xRightS = 117;
 
 	int clawSpeed = 100;
 
@@ -205,17 +202,17 @@ task usercontrol()
 
 	//claw and arm rotation
 	  if(vexRT[Ch2] > deadzone || vexRT[Ch2] < -(deadzone)){
-	  	motor[arms] = (vexRT[Ch2]/1.75);
+	  	motor[arms] = (vexRT[Ch2]/1.5);
 	  }else{
 	  	motor[arms] = 0;
 	  }
 
 	  //claw open close
 	  //open
-	  if(vexRT[Btn6U]){
+	  if(vexRT[Btn6UXmtr2]){
 	  	motor[claws] = clawSpeed;
 	  //close
-	  } else if(vexRT[Btn5U]){
+	  } else if(vexRT[Btn5UXmtr2]){
 	  	motor[claws] = -clawSpeed;
 	  }else{
 	  	motor[claws] = 0;
