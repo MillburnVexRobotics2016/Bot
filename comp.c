@@ -45,6 +45,7 @@ void pre_auton()
   // Set bStopTasksBetweenModes to false if you want to keep user created tasks
   // running between Autonomous and Driver controlled modes. You will need to
   // manage all user created tasks if set to false.
+
   bStopTasksBetweenModes = true;
 
 	// Set bDisplayCompetitionStatusOnLcd to false if you don't want the LCD
@@ -120,39 +121,51 @@ void drive(int direction){
 //}
 
 void clawclose(int power){
-	motor[Claws] = -power;
-}
-void clawopen(int power){
 	motor[Claws] = power;
 }
+void clawopen(int power){
+	motor[Claws] = -power;
+}
 void liftup(int power){
-	motor[BArms] = power;
+	motor[BArms] = -power;
 }
 void liftdown(int power){
-	motor[BArms] = -power;
+	motor[BArms] = power;
 }
 
 //autonomous code here
 task autonomous()
 {
+	slaveMotor(TLArms, BArms);
+	slaveMotor(TRArms, BArms);
 	drive(FORWARDS);
-	wait1Msec(1000);
+	wait1Msec(1750);
 	drive(STOP);
 
-	clawclose(127);
-	wait1Msec(700);
-	clawopen(0);
+	clawclose(100);
+	wait1Msec(300);
+	liftup(56);
 
+	drive(FORWARDS);
+	wait1Msec(300);
+	drive(STOP);
+
+
+	wait1Msec(200);
 	drive(TURNRIGHT);
-	wait1Msec(500);
+	wait1Msec(800);
 	drive(STOP);
 
 	drive(BACKWARDS);
-	wait1Msec(1000);
+	liftup(127);
+	wait1Msec(650);
 	drive(STOP);
 
-	slaveMotor(TLArms, BArms);
-	slaveMotor(TRArms, BArms);
+	clawOpen(30);
+	wait1Msec(500);
+	clawOpen(0);
+
+
 	while(SensorValue[armPo] <= 1700){
 		liftup(127);
 	}
@@ -167,10 +180,38 @@ task autonomous()
 		motor[BArms] = 0;
 	}
 
+
+
+	wait1Msec(1000);
+
 	wait1Msec(200);
 	while(SensorValue[armPo] <= 1700 && SensorValue[armPo] > 0){
 		liftdown(127);
 	}
+
+	drive(FORWARDS);
+	wait1Msec(500);
+	drive(STOP);
+
+	clawclose(127);
+	wait1Msec(300);
+	liftup(56);
+
+	drive(TURNLEFT);
+	wait1Msec(200);
+	drive(STOP);
+
+	drive(BACKWARDS);
+	wait1Msec(1600);
+	drive(STOP);
+
+
+
+
+
+
+
+
 
 
 
@@ -191,6 +232,7 @@ task autonomous()
 //called in the main task
 task driveM()
 {
+
 	int deadzone = 20;
 	while(true)
 	{
@@ -216,17 +258,38 @@ task usercontrol()
 	//slaves all arm controls to the BArms name, all arm movements should happen at the same time
 	slaveMotor(TLArms, BArms);
 	slaveMotor(TRArms, BArms);
-	//float desiredPos = -1;
+	//float desiredPos Btn7U
 	int triggered = 0;
+	int controls = 0;
+	int armd1, armd2, armu1, armu2, clawo1, clawo2, clawc1, clawc2;
+	if(controls == 0){
+		armd1 = Btn5D;
+		armd2 = Btn8D;
+		armu1 = Btn5U;
+		armu2 = Btn8L;
+		clawo1 = Btn6D;
+		clawo2 = Btn8U;
+		clawc1 = Btn6U;
+		clawc2 = Btn8R;
+	}else{
+		armd1 = Btn5U;
+		armd2 = Btn8D;
+		armu1 = Btn7L;
+		armu2 = Btn8L;
+		clawo1 = Btn6D;
+		clawo2 = Btn8U;
+		clawc1 = Btn6U;
+		clawc2 = Btn8R;
+ 	}
 	while(true)
 	{
 
 		//main arm up down
 		//armPo is the shaft encoder for the arms, values go from 0 to about 4000, actually allows 265 degrees of movement for the axle
 		//up
-		if((vexRT[Btn5U] || vexRT[Btn8D]) && SensorValue[armPo] < 2300 && triggered == 0){
+		if((vexRT[armd1] || vexRT[armd2]) && triggered == 0){
 			motor[BArms] = -127;
-		}else if((vexRT[Btn7L] || vexRT[Btn8L]) && triggered == 0){
+		}else if((vexRT[armu1] || vexRT[armu2]) && triggered == 0){
 		//down
 			motor[BArms] = 100;
 		//}else if(triggered == 0 && SensorValue[armPo] > 150){
@@ -243,17 +306,16 @@ task usercontrol()
 	 // }else
 
 		//claw open and close
-	  if((vexRT[Btn6D] || vexRT[Btn8U])){
+	  if((vexRT[clawo1] || vexRT[clawo2])){
 			motor[Claws] = 80;
-		}else if(vexRT[Btn6U] || vexRT[Btn8R]){
+		}else if(vexRT[clawc1] || vexRT[clawc2]){
 			motor[Claws] = -80;
-		}
-else{
+		}else{
 			motor[Claws] = 0;
 		}
 
 		//auto throw over the fence
-		if((vexRT[Btn7D] && SensorValue[armPo] < 1700) || triggered == 1)
+		if((vexRT[Btn7D] && SensorValue[armPo] < 1700) && 1 == 2|| triggered == 1)
 		{
 			triggered = 1;
 			motor[BArms] = 127;
