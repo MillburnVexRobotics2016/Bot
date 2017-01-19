@@ -285,7 +285,7 @@ task usercontrol()
 	int hold = 0;
 	//resetSensor(in1);
 	int armd1, armd2, armu1, armu2, clawo1, clawo2, clawc1, clawc2;
-	if(controls == 0){
+	//if(controls == 0){
 		armd1 = Btn5D;
 		armd2 = Btn8D;
 		armu1 = Btn5U;
@@ -294,16 +294,16 @@ task usercontrol()
 		clawo2 = Btn8U;
 		clawc1 = Btn6U;
 		clawc2 = Btn8R;
-		}else{
-		armd1 = Btn5U;
-		armd2 = Btn8D;
-		armu1 = Btn7L;
-		armu2 = Btn8L;
-		clawo1 = Btn6D;
-		clawo2 = Btn8U;
-		clawc1 = Btn6U;
-		clawc2 = Btn8R;
-	}
+		//}else{
+		//armd1 = Btn5U;
+		//armd2 = Btn8D;
+		//armu1 = Btn7L;
+		//armu2 = Btn8L;
+		//clawo1 = Btn6D;
+		//clawo2 = Btn8U;
+		//clawc1 = Btn6U;
+		//clawc2 = Btn8R;
+//	}
 	while(true)
 	{
 
@@ -334,7 +334,7 @@ task usercontrol()
 
 		//auto throw over the fence
 		int height = 3250;
-		if(((vexRT[Btn7D] || vexRT[Btn8D]) && SensorValue[armPo] < height - 1200)|| triggered == 1)
+		if(((vexRT[Btn7D] || vexRT[Btn8D]) && SensorValue[armPo] < height - 1000)|| triggered == 1)
 		{
 			triggered = 1;
 			motor[BArms] = -127;
