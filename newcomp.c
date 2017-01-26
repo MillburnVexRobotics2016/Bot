@@ -174,26 +174,29 @@ void a(){
 
 	wait1Msec(200);
 	drive(TURNLEFT); //turns left
-	wait1Msec(700);
+	wait1Msec(650);
 	drive(STOP);
 
 	drive(BACKWARDS);
 	wait1Msec(600);
 	liftup(127);
-	wait1Msec(850); //lift first time
+	wait1Msec(250); //lift first time
 
 
 
-	clawopen(70);
+	clawopen(127);
+	wait1Msec(500);
 	drive(STOP);
 	wait1Msec(700);
 	liftup(0);
-	clawclose(0);
+	clawclose(85);
 	wait1Msec(500);
 
 
 	liftdown(127);
-	wait1Msec(1200);
+	wait1Msec(600);
+	clawclose(0);
+	wait1Msec(600);
 	liftdown(0); //stop going up
 
 	//drive(TURNRIGHT);
@@ -201,23 +204,27 @@ void a(){
 	//drive(STOP);
 	liftdown(20)
 	drive(FORWARDS);
-	wait1Msec(1340);
+	wait1Msec(300);
+	clawopen(90);
+	wait1Msec(840);
+
 	drive(STOP);
 
 
 	clawclose(127);
 	liftdown(0)
-	wait1Msec(800);
+	wait1Msec(1000);
 	liftup(56);
 
 	//
 	wait1Msec(400);
 	drive(BACKWARDS);
-	wait1Msec(1800);
-	drive(STOP);
-	wait1Msec(100);
+	wait1Msec(1000);
 	clawopen(127);
+	wait1Msec(650);
+	drive(STOP);
 	wait1Msec(900);
+
 	clawopen(0);
 	liftdown(0);
 }

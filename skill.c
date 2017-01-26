@@ -164,13 +164,13 @@ void drive(int direction){
 		motor[BR] = speed;
 		}else if(direction == 3){
 		//turn left
-		motor[FL] = speed;
-		motor[FR] = speed;
+		motor[FL] = -speed;
+		motor[FR] = -speed;
 		motor[BL] = -speed;
-		motor[BR] = speed;
+		motor[BR] = -speed;
 		}else if(direction == 4){
 		//turn right
-		motor[FL] = -speed;
+		motor[FL] = speed;
 		motor[FR] = speed;
 		motor[BL] = speed;
 		motor[BR] = speed;
@@ -221,7 +221,7 @@ task autonomous()
 	slaveMotor(LeftClaw, RightClaw);
 
 	drive(BACKWARDS);
-	wait1Msec(1450);
+	wait1Msec(1500);
 
 
 	drive(STOP);
@@ -230,8 +230,10 @@ task autonomous()
 	int idx = 1;
 	liftup(20);
 	while(idx < 4){
+		clawopen(60);
+		liftup(40);
 		drive(FORWARDS);
-		wait1Msec(650);
+		wait1Msec(750);
 		drive(STOP);
 		wait1Msec(100);
 		clawclose(127);
@@ -241,7 +243,7 @@ task autonomous()
 
 		//
 		drive(BACKWARDS);
-		wait1Msec(800);
+		wait1Msec(950);
 
 		liftdown(127);
 		clawopen(127);
@@ -255,42 +257,58 @@ task autonomous()
 		liftdown(0);
 		wait1Msec(500);
 		clawclose(0);
-		wait1Msec(500);
+		//wait1Msec(500);
 		liftup(127);
 		wait1Msec(1200);
 		liftup(0);
 		idx++;
 	}
+	clawopen(45);
 	drive(BACKWARDS);
-	wait1Msec(700);
-	drive(STOP);
-	drive(FORWARDS);
-	wait1Msec(750);
-	drive(STOP);
-
 	wait1Msec(300);
-	drive(TURNRIGHT);
-	wait1Msec(950);
 	drive(STOP);
-
 	drive(FORWARDS);
-	wait1Msec(750);
+	wait1Msec(650);
+	drive(STOP);
+	liftup(40);
+	wait1Msec(300);
+	drive(TURNLEFT);
+
+	wait1Msec(450);
+	drive(STOP);
+	liftup(40);
+	drive(FORWARDS);
+	wait1Msec(850);
 	clawclose(127);
-	wait1Msec(300);
-	clawclose(60);
+	wait1Msec(900);
+	liftup(0)
+	liftdown(45);
 	drive(STOP);
-	drive(BACKWARDS);
 	drive(TURNRIGHT);
-	wait1Msec(1600);
+	wait1Msec(450);
 	drive(STOP);
 	drive(BACKWARDS);
+	wait1Msec(300);
+	liftdown(127);
 	wait1Msec(750);
 	drive(STOP);
 	clawopen(127);
 	wait1Msec(600);
 	clawopen(0);
-	liftdown(127);
+	liftup(127);
 	wait1Msec(1200);
+	liftdown(0);
+	drive(FORWARDS);
+	wait1Msec(900);
+	clawclose(127);
+	wait1Msec(400);
+	liftup(30);
+	drive(BACKWARDS);
+	wait1Msec(600);
+	liftup(127);
+	wait1Msec(400);
+	clawopen(127);
+	wait1Msec(500);
 	liftdown(0);
 
 
