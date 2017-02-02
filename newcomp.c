@@ -70,16 +70,16 @@ void drive(int direction){
 	int speed = 100;
 	if(direction == 1){
 		//forwards
-		motor[FL] = speed;
-		motor[FR] = -speed;
-		motor[BL] = speed;
-		motor[BR] = -speed;
-		}else if(direction == 2){
-		//backwards
 		motor[FL] = -speed;
 		motor[FR] = speed;
 		motor[BL] = -speed;
 		motor[BR] = speed;
+		}else if(direction == 2){
+		//backwards
+		motor[FL] = speed;
+		motor[FR] = -speed;
+		motor[BL] = speed;
+		motor[BR] = -speed;
 		}else if(direction == 3){
 		//turn left
 		motor[FL] = speed;
@@ -103,28 +103,18 @@ void drive(int direction){
 }
 
 
-//void off {
-//	motor[FL] = 0;
-//	motor[FR] = 0;
-//	motor[BL] = 0;
-//	motor[BR] = 0;
-//}
 
-//float getDesiredClawPos(){
-//	float min = 1600;
-//	if(SensorValue(armPo) < min)return -1;
-//	float percent = armPo - min;
-//	float max = 2900-min;
-//	percent = percent/max;
-//	return (percent > 1) ? 1 : percent;
-//}
 
 void clawclose(int power){
 	motor[RightClaw] = power;
+	motor[LeftClaw] = -power;
 }
 void clawopen(int power){
 	motor[RightClaw] = -power;
+	motor[LeftClaw] = power;
 }
+
+
 void liftup(int power){
 	motor[RightInside] = power;
 }
@@ -160,10 +150,10 @@ void a(){
 	liftdown(20);
 
 	drive(FORWARDS);
-	wait1Msec(1230);
+	wait1Msec(1100);
 	drive(STOP);
 
-	clawclose(100);
+	clawopen(100);
 	wait1Msec(1000);
 	liftup(50);
 
@@ -178,14 +168,14 @@ void a(){
 	drive(STOP);
 
 	drive(BACKWARDS);
-	wait1Msec(600);
-	liftup(127);
-	wait1Msec(250); //lift first time
+	wait1Msec(30);
+	liftup(127); //lift first time
+	wait1Msec(550);
 
 
 
-	clawopen(127);
-	wait1Msec(500);
+	clawclose(127);
+	wait1Msec(200);
 	drive(STOP);
 	wait1Msec(700);
 	liftup(0);
@@ -204,14 +194,15 @@ void a(){
 	//drive(STOP);
 	liftdown(20)
 	drive(FORWARDS);
-	wait1Msec(300);
+	wait1Msec(700);
 	clawopen(90);
 	wait1Msec(840);
+
 
 	drive(STOP);
 
 
-	clawclose(127);
+	clawopen(127);
 	liftdown(0)
 	wait1Msec(1000);
 	liftup(56);
@@ -219,8 +210,11 @@ void a(){
 	//
 	wait1Msec(400);
 	drive(BACKWARDS);
-	wait1Msec(1000);
-	clawopen(127);
+
+	wait1Msec(1200);
+	drive(STOP);
+	wait1Msec(300);
+	clawclose(127);
 	wait1Msec(650);
 	drive(STOP);
 	wait1Msec(900);
@@ -229,12 +223,20 @@ void a(){
 	liftdown(0);
 }
 
+void c (){
+	clawopen(127)
+	wait1Msec(2000);
+	clawopen(0);
+	clawclose(127);
+	wait1Msec(2000);
+	clawopen(0);
+}
 task autonomous()
 {
 	slaveMotor(LeftInside, RightInside);
 	slaveMotor(LeftOutside, RightInside);
 	slaveMotor(RightOutside, RightInside);
-	slaveMotor(LeftClaw, RightClaw);
+	//slaveMotor(LeftClaw, RightClaw);
 
 	a();
 

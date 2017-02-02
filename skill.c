@@ -114,9 +114,7 @@
 #define TURNLEFT 3
 #define TURNRIGHT 4
 #define OPENHEIGHT 4000
-#define CLAWOPENPERC 30
-#define RELEASE 1700
-#define CLOSED 2050
+
 
 
 /*---------------------------------------------------------------------------*/
@@ -189,22 +187,6 @@ void drive(int direction){
 		motor[BR] = speed;
 	}
 }
-
-//void off {
-//	motor[FL] = 0;
-//	motor[FR] = 0;
-//	motor[BL] = 0;
-//	motor[BR] = 0;
-//}
-
-//float getDesiredClawPos(){
-//	float min = 1600;
-//	if(SensorValue(armPo) < min)return -1;
-//	float percent = armPo - min;
-//	float max = 2900-min;
-//	percent = percent/max;
-//	return (percent > 1) ? 1 : percent;
-//}
 
 void clawclose(int power){
 	motor[RightClaw] = power;
@@ -340,7 +322,6 @@ task usercontrol()
 	slaveMotor(LeftClaw, RightClaw);
 
 	int triggered = 0;
-	int range = CLOSED - RELEASE;
 
 	while(true){
 		motor[FL]  = -vexRT[Ch1] + vexRT[Ch3];
@@ -363,37 +344,27 @@ task usercontrol()
 			motor[RightOutside] = -10;
 		}
 
-		if(vexRT[Btn6D] == 1 && vexRT[Btn6U] == 0)
+		if(vexRT[Btn6U] == 1 && vexRT[Btn6D] == 0)
 		{
-			motor[RightClaw] = 60;
-		}else if(vexRT[Btn6U] == 1 && vexRT[Btn6D] == 0){
-			motor[RightClaw] = -80;
+			motor[RightClaw] = 80;
+		}else if(vexRT[Btn6D] == 1 && vexRT[Btn6U] == 0){
+			motor[RightClaw] = -107;
 		}else{
 			motor[RightClaw] = 0;
 		}
 
-		if(((vexRT[Btn7D] || vexRT[Btn8D]) && SensorValue[armPo] < OPENHEIGHT)|| triggered == 1){
-			int dist = OPENHEIGHT - SensorValue[armPo];
-			int perc = SensorValue[armPo] * 100 / OPENHEIGHT;
-			int clawperc = 0;
-			int dclawperc = 0;
+		if(((vexRT[Btn7D] || vexRT[Btn8D]) && SensorValue[armPo] < OPENHEIGHT-700)|| triggered == 1){
 			triggered = 1;
+			motor[LeftOutside] = motor[RightInside] = 127;
+			motor[RightOutside] = motor[LeftInside] = 127;
 
-			clawperc = 100*((SensorValue[clawPo] - RELEASE)/range);
-
-			if(perc > CLAWOPENPERC){
-				dclawperc	= 100.0 * ((float)1-((float)(perc - CLAWOPENPERC))/CLAWOPENPERC);
+			if(SensorValue[armPo] > OPENHEIGHT-700){
+				motor[RightClaw] = motor[LeftClaw] = -127;
 			}
-
-			if(clawperc < dclawperc)
-				motor[RightClaw] = 127;
-
-			if(clawperc > dclawperc)
-				motor[RightClaw] = -127;
-
-			if(dist <= 0){
-				motor[RightOutside] = 0;
-				motor[RightClaw] = 0;
+			if(SensorValue[armPo] > OPENHEIGHT){
+				motor[LeftOutside] = motor[RightInside] = 0;
+				motor[RightOutside] = motor[LeftInside] = 0;
+				motor[RightClaw] = motor[LeftClaw] = 0;
 				triggered = 0;
 			}
 		}
