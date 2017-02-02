@@ -255,27 +255,26 @@ task autonomous()
 
 task usercontrol()
 {
-	// User control code here, inside the loop
-	slaveMotor(LeftInside, RightOutside);
-	slaveMotor(LeftOutside, RightOutside);
+	slaveMotor(LeftInside, LeftOutside);
+	slaveMotor(LeftOutside, RightInside);
 	slaveMotor(RightInside,RightOutside);
 	slaveMotor(LeftClaw, RightClaw);
 
 	int triggered = 0;
 
 	while(true){
-		motor[FL]  = vexRT[Ch1] + vexRT[Ch3];
-		motor[FR] = vexRT[Ch1] - vexRT[Ch3];
-		motor[BL]  = vexRT[Ch1] + vexRT[Ch3];
-		motor[BR] = vexRT[Ch1] - vexRT[Ch3];
+		motor[FL]  = -vexRT[Ch1] + vexRT[Ch3];
+		motor[FR] = -vexRT[Ch1] - vexRT[Ch3];
+		motor[BL]  = -vexRT[Ch1] + vexRT[Ch3];
+		motor[BR] = -vexRT[Ch1] - vexRT[Ch3];
 		wait1Msec(1);
 
-		if(VexRT[Btn5U] == 1 && VexRT[Btn5D] == 0 && triggered == 0)
+		if(vexRT[Btn5U] == 1 && vexRT[Btn5D] == 0 && triggered == 0)
 		{
 
 			motor[RightOutside] = 127;
 
-			} else if(VexRT[Btn5D] == 1 && VexRT[Btn5U] == 0 && triggered == 0){
+			} else if(vexRT[Btn5D] == 1 && vexRT[Btn5U] == 0 && triggered == 0){
 
 			motor[RightOutside] = -127;
 
@@ -284,32 +283,31 @@ task usercontrol()
 			motor[RightOutside] = -10;
 		}
 
-		if(VexRT[Btn6U] == 1 && VexRT[Btn6D] == 0)
+		if(vexRT[Btn6U] == 1 && vexRT[Btn6D] == 0)
 		{
-			motor[RightClaw] = 50;
-		}else if(VexRT[Btn6D] == 1 && VexRT[Btn6U] == 0){
-			motor[RightClaw] = -80;
+			motor[RightClaw] = 80;
+		}else if(vexRT[Btn6D] == 1 && vexRT[Btn6U] == 0){
+			motor[RightClaw] = -107;
 		}else{
-			motor[RightClaw] = motor[LeftClaw] = 0;
+			motor[RightClaw] = 0;
 		}
 
-		int pos = 3600;
-
-		if(((vexRT[Btn7D] || vexRT[Btn8D]) && SensorValue[armPo] < pos-700)|| triggered == 1){
+		if(((vexRT[Btn7D] || vexRT[Btn8D]) && SensorValue[armPo] < OPENHEIGHT-700)|| triggered == 1){
 			triggered = 1;
 			motor[LeftOutside] = motor[RightInside] = 127;
 			motor[RightOutside] = motor[LeftInside] = 127;
 
-			if(SensorValue[armPo] > pos-700){
+			if(SensorValue[armPo] > OPENHEIGHT-700){
 				motor[RightClaw] = motor[LeftClaw] = -127;
 			}
-			if(SensorValue[armPo] > pos){
+			if(SensorValue[armPo] > OPENHEIGHT){
 				motor[LeftOutside] = motor[RightInside] = 0;
 				motor[RightOutside] = motor[LeftInside] = 0;
 				motor[RightClaw] = motor[LeftClaw] = 0;
 				triggered = 0;
 			}
 		}
+
 
 	}
 
