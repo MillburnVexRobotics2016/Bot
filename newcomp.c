@@ -1,14 +1,16 @@
 #pragma config(Sensor, in1,    armPo,          sensorPotentiometer)
-#pragma config(Motor,  port1,           BL,            tmotorVex393_HBridge, openLoop)
-#pragma config(Motor,  port2,           FL,            tmotorVex393_MC29, openLoop, driveLeft)
+#pragma config(Sensor, in2,    clawPo,         sensorPotentiometer)
+#pragma config(Motor,  port1,           BL,            tmotorVex393_HBridge, openLoop, reversed)
+#pragma config(Motor,  port2,           FL,            tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port3,           LeftOutside,   tmotorVex393HighSpeed_MC29, openLoop, reversed)
 #pragma config(Motor,  port4,           LeftInside,    tmotorVex393HighSpeed_MC29, openLoop, reversed)
 #pragma config(Motor,  port5,           LeftClaw,      tmotorVex393_MC29, openLoop)
-#pragma config(Motor,  port6,           RightClaw,     tmotorVex393_MC29, openLoop, reversed)
+#pragma config(Motor,  port6,           RightClaw,     tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port7,           RightInside,   tmotorVex393HighSpeed_MC29, openLoop, reversed)
 #pragma config(Motor,  port8,           RightOutside,  tmotorVex393HighSpeed_MC29, openLoop, reversed)
-#pragma config(Motor,  port9,           FR,            tmotorVex393_MC29, openLoop, driveRight)
-#pragma config(Motor,  port10,          BR,            tmotorVex393_HBridge, openLoop)
+#pragma config(Motor,  port9,           FR,            tmotorVex393_MC29, openLoop, reversed)
+#pragma config(Motor,  port10,          BR,            tmotorVex393_HBridge, openLoop, reversed)
+
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
 /*        Description: Competition template for VEX EDR                      */
@@ -29,6 +31,7 @@
 #define BACKWARDS 2
 #define TURNLEFT 3
 #define TURNRIGHT 4
+#define OPENHEIGHT 4000
 
 
 /*---------------------------------------------------------------------------*/
