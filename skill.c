@@ -156,16 +156,16 @@ void drive(int direction){
 	int speed = 100;
 	if(direction == 1){
 		//forwards
-		motor[FL] = speed;
-		motor[FR] = -speed;
-		motor[BL] = speed;
-		motor[BR] = -speed;
-		}else if(direction == 2){
-		//backwards
 		motor[FL] = -speed;
 		motor[FR] = speed;
 		motor[BL] = -speed;
 		motor[BR] = speed;
+		}else if(direction == 2){
+		//backwards
+		motor[FL] = speed;
+		motor[FR] = -speed;
+		motor[BL] = speed;
+		motor[BR] = -speed;
 		}else if(direction == 3){
 		//turn left
 		motor[FL] = -speed;
@@ -346,9 +346,9 @@ task usercontrol()
 
 		if(vexRT[Btn6U] == 1 && vexRT[Btn6D] == 0)
 		{
-			motor[RightClaw] = 80;
+			motor[RightClaw] = 65;
 		}else if(vexRT[Btn6D] == 1 && vexRT[Btn6U] == 0){
-			motor[RightClaw] = -107;
+			motor[RightClaw] = -70;
 		}else{
 			motor[RightClaw] = 0;
 		}
