@@ -41,7 +41,7 @@
 #define BACKWARDS 2
 #define TURNLEFT 3
 #define TURNRIGHT 4
-#define OPENHEIGHT 4000
+#define OPENHEIGHT 2600
 
 
 
@@ -84,28 +84,28 @@ void drive(int direction){
 	int speed = 100;
 	if(direction == 1){
 		//forwards
-		motor[FL] = -speed;
-		motor[FR] = speed;
-		motor[BL] = -speed;
-		motor[BR] = speed;
+		motor[FL] = speed;
+		motor[FR] = -speed;
+		motor[BL] = speed;
+		motor[BR] = -speed;
 		}else if(direction == 2){
 		//backwards
-		motor[FL] = speed;
-		motor[FR] = -speed;
-		motor[BL] = speed;
-		motor[BR] = -speed;
+		motor[FL] = -speed;
+		motor[FR] = speed;
+		motor[BL] = -speed;
+		motor[BR] = speed;
 		}else if(direction == 3){
 		//turn left
-		motor[FL] = -speed;
-		motor[FR] = -speed;
-		motor[BL] = -speed;
-		motor[BR] = -speed;
-		}else if(direction == 4){
-		//turn right
 		motor[FL] = speed;
 		motor[FR] = speed;
 		motor[BL] = speed;
 		motor[BR] = speed;
+		}else if(direction == 4){
+		//turn right
+		motor[FL] = -speed;
+		motor[FR] = -speed;
+		motor[BL] = -speed;
+		motor[BR] = -speed;
 		}else{
 		//stop
 		speed = 0;
@@ -135,7 +135,7 @@ task autonomous()
 	slaveMotor(LeftLift, RightLift);
 
 	drive(BACKWARDS);
-	wait1Msec(1500);
+	wait1Msec(1400);
 
 
 	drive(STOP);
@@ -144,6 +144,8 @@ task autonomous()
 	int idx = 1;
 	liftup(20);
 	while(idx < 4){
+		liftdown(127);
+		wait1Msec(600);
 		clawopen(60);
 		liftup(40);
 		drive(FORWARDS);
@@ -248,10 +250,10 @@ task usercontrol()
 	int triggered = 0;
 
 	while(true){
-		motor[FL]  = -vexRT[Ch1] + vexRT[Ch3];
-		motor[FR] = -vexRT[Ch1] - vexRT[Ch3];
-		motor[BL]  = -vexRT[Ch1] + vexRT[Ch3];
-		motor[BR] = -vexRT[Ch1] - vexRT[Ch3];
+		motor[FL]  = vexRT[Ch1] + vexRT[Ch3];
+		motor[FR] = vexRT[Ch1] - vexRT[Ch3];
+		motor[BL]  = vexRT[Ch1] + vexRT[Ch3];
+		motor[BR] = vexRT[Ch1] - vexRT[Ch3];
 		wait1Msec(1);
 
 		if(vexRT[Btn5U] == 1 && vexRT[Btn5D] == 0 && triggered == 0)
@@ -290,7 +292,5 @@ task usercontrol()
 				triggered = 0;
 			}
 		}
-
 	}
-
 }
