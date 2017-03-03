@@ -64,6 +64,7 @@ void pre_auton()
 	// Set bStopTasksBetweenModes to false if you want to keep user created tasks
 	// running between Autonomous and Driver controlled modes. You will need to
 	// manage all user created tasks if set to false.
+	SensorValue[gyro] = 0;
 	bStopTasksBetweenModes = true;
 
 	// Set bDisplayCompetitionStatusOnLcd to false if you don't want the LCD
@@ -85,7 +86,7 @@ void pre_auton()
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 void drive(int direction){
-	int speed = 100;
+	int speed = 90;
 	if(direction == 1){
 		//forwards
 		motor[FL] = speed;
@@ -241,57 +242,207 @@ void c(){
 }
 
 void leftStars(){
+	liftdown(50);
 	drive(FORWARDS); //drives forwards for one second
-	wait1Msec(200);
+	wait1Msec(140);
 	drive(STOP);
+
+	clawopen(400);
+	wait1Msec(400;
+	clawopen(0);
+
+	while(abs(SensorValue[gyro]) < 460){
 
 	drive(TURNRIGHT);
-	wait1Msec(360); // Turns to the right
+
+	}
 	drive(STOP);
 
-	liftdown(40);
 
-	clawopen(127);
+
+
+
 	wait1Msec(200); //closes the claw to grab stars
 	clawopen(0);
 
-	clawopen(40); // constantly closes claw to keep them secured
+	clawopen(30); // constantly closes claw to keep them secured
 
 	drive(FORWARDS);
-	wait1Msec(2200); //Goes forward
+	wait1Msec(1300);
+	clawopen(127);
+	wait1Msec(400); //Goes forward
 	drive(STOP);
 
 	clawopen(120);
 	wait1Msec(700);
-	clawopen(0);
+	liftup(0);
 
-	clawopen(70);
+	drive(BACKWARDS);
+	wait1Msec(1400);
+	drive(STOP);
 
 
-	liftup(70);
+
+	liftup(100);
 	wait1Msec(500);
+	liftup(0);
+	liftdown(20);
+	wait1Msec(300);
 	liftup(0);
 
 	liftup(20);
 
+	while(abs(SensorValue[gyro]) < 1300){
+
 	drive(TURNRIGHT);
-	wait1Msec(400);
+
+	}
 	drive(STOP);
 	liftup(0);
 
 	drive(BACKWARDS);
-	wait1Msec(1000);
+	wait1Msec(800);
 	liftup(127); //lift first time
-	wait1Msec(492);
+	wait1Msec(452);
 
 	clawclose(127);
 	wait1Msec(300);
 	wait1Msec(200);
 	drive(STOP);
+	liftup(0);
+	liftdown(127);
+	wait1Msec(1000);
+	liftdown(0);
+	drive(FORWARDS);
+	wait1Msec(600);
+	drive(STOP);
+	drive(TURNLEFT);
+	wait1Msec(400);
+	drive(STOP);
+
+	drive(FORWARDS);
+	wait1Msec(600);
+	drive(STOP);
+	clawopen(127);
+	wait1Msec(1500);
+
+	drive(TURNRIGHT);
+	wait1Msec(350);
+	drive(STOP);
+
+
+	drive(BACKWARDS);
+	wait1Msec(500);
+	liftup(127); //lift first time
+	wait1Msec(452);
+
+	clawclose(127);
+	wait1Msec(300);
+	wait1Msec(200);
+	drive(STOP);
+	liftdown(127);
+	wait1Msec(500);
+
+	drive(BACKWARDS);
+	wait1Msec(800);
+	liftup(127); //lift first time
+	wait1Msec(452);
+
+	clawclose(127);
+	wait1Msec(300);
+	wait1Msec(200);
+	drive(STOP);
+	liftup(0);
+	liftdown(127);
+
+
+
+
 
 }
 
+void boxStars(){
+	liftdown(50);
+	drive(FORWARDS); //drives forwards for one second
+	wait1Msec(850);
+	drive(20);
 
+	clawopen(127);
+	wait1Msec(1000); //Goes forward
+
+	liftup(30);
+	wait1Msec(300);
+
+	while(abs(SensorValue[gyro]) < 270){
+
+		drive(TURNRIGHT);
+
+	}
+	wait1Msec(400);
+
+	drive(BACKWARDS);
+	wait1Msec(800);
+	drive(STOP);
+	while(SensorValue[armPo] < OPENHEIGHT){
+		liftup(127); //lift first time
+	}
+
+
+	clawclose(127);
+	wait1Msec(300);
+	wait1Msec(200);
+	drive(STOP);
+	liftup(0);
+
+
+	liftdown(127);
+	wait1Msec(1000);
+	liftdown(30);
+
+	clawopen(40);
+	drive(FORWARDS);
+	wait1Msec(1100);
+	clawopen(127);
+	drive(STOP);
+	wait1Msec(1500);
+	clawopen(60);
+
+	drive(BACKWARDS);
+	wait1Msec(1200);
+	drive(STOP);
+	while(SensorValue[armPo] < OPENHEIGHT){
+		liftup(127); //lift first time
+	}
+
+
+	clawclose(127);
+	wait1Msec(300);
+	drive(STOP);
+	wait1Msec(200);
+	liftup(0);
+
+
+
+
+
+}
+
+void forwardstar(){
+		drive(BACKWARDS);
+		wait1Msec(700);
+		clawopen(127);
+		wait1Msec(300);
+		clawclose(0);
+		while(SensorValue[armPo] < OPENHEIGHT){
+			liftup(127);
+		}
+		drive(STOP);
+		clawopen(127);
+		wait1Msec(200);
+		clawopen(0);
+
+
+}
 
 
 task autonomous()
@@ -303,7 +454,7 @@ task autonomous()
 	slaveMotor(BL, FL);
 	//slaveMotor(LeftClaw, RightClaw);
 
-	leftStars();
+	boxstars();
 
 
 }
