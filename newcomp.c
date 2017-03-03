@@ -28,7 +28,7 @@
 #include "Vex_Competition_Includes.c"
 
 int Mode = 0;
-int Type = 0;
+int first = 0;
 int Side = 0;
 
 
@@ -40,15 +40,13 @@ int Side = 0;
 #define OPENHEIGHT 3315
 #define LEFTBTN 1
 #define CENTERBTN 2
-#define REGULAR 1
-#define COUNTER 2
+#define BOX 1
+#define NOBOX 2
 #define LEFTSIDE 1
 #define RIGHTSIDE 2
-#define BOX 1
-#define STRAIGHTBACK 2
-#define CIRC 4
-
-
+#define BOXFIRST 1
+#define STARSFIRST 2
+#define circ 4
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
 /*                                                                           */
@@ -59,18 +57,88 @@ int Side = 0;
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 
+task FixGyro()
+{
+		//calibrates the gyro
+		SensorType[in1] = sensorNone;
+		wait1Msec(1000);
+		SensorType[in1] = sensorGyro;
+		wait1Msec(3000);
+
+		while(true)
+		{
+			if(SensorValue[gyro] == 0)
+			{
+				SensorValue[gyro] = 0;
+			}
+			if(SensorValue[gyro] == 3599 || SensorValue[gyro] == -3599)
+			{
+				SensorValue[gyro] = 0;
+			}
+		}
+}
+
 void pre_auton()
 {
 	// Set bStopTasksBetweenModes to false if you want to keep user created tasks
 	// running between Autonomous and Driver controlled modes. You will need to
 	// manage all user created tasks if set to false.
-	SensorValue[gyro] = 0;
-	bStopTasksBetweenModes = true;
+	bStopTasksBetweenModes = false;
 
-	// Set bDisplayCompetitionStatusOnLcd to false if you don't want the LCD
-	// used by the competition include file, for example, you might want
-	// to display your team name on the LCD in this function.
-	// bDisplayCompetitionStatusOnLcd = false;
+	startTask(FixGyro);
+	bLCDBacklight = true;
+
+	while(vrDisabled && Mode == 0)
+	{
+			displayLCDCenteredString(0, "select mode");
+  		displayLCDString(1, 0, "<Box  <No Box");
+
+  		while(Mode == 0)
+  		{
+  			if(nLCDButtons == LEFTBTN)
+  			{
+  				Mode = BOX;
+  			}
+  			else if(nLCDButtons == CENTERBTN)
+  			{
+  				Mode = NOBOX;
+  			}
+  		}
+
+  		if(Mode == BOX)
+  		{
+  			displayLCDCenteredString(0, "select First");
+  			displayLCDString(1, 0, "<Box   <Stars");
+
+  			while(first == 0)
+  			{
+  				if(nLCDButtons == LEFTBTN)
+  				{
+  					first = BOXFIRST;
+  				}
+  				else if(nLCDButtons == CENTERBTN)
+  				{
+  					first = STARSFIRST;
+  				}
+  			}
+  		}
+
+
+  			displayLCDCenteredString(0, "select side");
+  			displayLCDString(1, 0, "<Left     <Right");
+  			while(Side == 0)
+  			{
+  				if(nLCDButtons == LEFTBTN)
+  				{
+  					Side = LEFTSIDE;
+  				}
+  				else if(nLCDButtons == CENTERBTN)
+  				{
+  					Side = RIGHTSIDE;
+  				}
+  			}
+
+	}
 
 	// All activities that occur before the competition starts
 	// Example: clearing encoders, setting servo positions, ...
